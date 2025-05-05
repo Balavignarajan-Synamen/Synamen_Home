@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components{
+    .click-btn{
+        @apply bg-rose-500 p-4 m-4 rounded-full hover:bg-blue-200 
+    }
+}
