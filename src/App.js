@@ -11,6 +11,7 @@ import Main from "./Components/TwoPopupOneBtn/Main";
 import FormYt1 from "./Components/ReactForm/FormYt1";
 import FormYt2 from "./Components/ReactForm/FormYt2";
 import TaskManager from "./Components/TaskManagerTask/TaskManager";
+import AnimatedAuthForm from "./Components/LoginInForm/AnimatedAuthForm";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path="/reactform" element={<FormYt1 />} />
           <Route path="/reactform2" element={<FormYt2 />} />
           <Route path="/taskmanager" element={<TaskManager />} />
+          <Route path="/loginform" element={<AnimatedAuthForm />} />
         </Routes>
       </div>
     </Router>

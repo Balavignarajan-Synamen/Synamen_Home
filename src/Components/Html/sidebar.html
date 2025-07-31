@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sidebar Layout</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/preline@1.5.1/dist/preline.js"></script>
+  <style>
+    /* Custom CSS to handle sidebar open/close state */
+
+    /* The sidebar is fixed for mobile, but on large screens, we need to toggle its visibility */
+    /* By default, on large screens, it's block and translated normally */
+    .sidebar-closed #hs-sidebar-content-push {
+      transform: translateX(-100%); /* Push it off-screen */
+      transition: transform 0.3s ease-in-out; /* Smooth transition */
+    }
+
+    /* Adjust main content margin when sidebar is closed on large screens */
+    .sidebar-closed #page-wrapper {
+      margin-left: 0;
+      transition: margin-left 0.3s ease-in-out;
+    }
+
+    /* For mobile (non-lg screens), Preline's overlay logic takes over for hiding/showing */
+    @media (max-width: 1023px) { /* Tailind's 'lg' breakpoint is 1024px */
+      #hs-sidebar-content-push.hs-overlay-open {
+        transform: translateX(0);
+      }
+      #hs-sidebar-content-push {
+         transform: translateX(-100%);
+         transition: transform 0.3s ease-in-out;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+
+<div id="hs-sidebar-content-push"
+     class="lg:block lg:translate-x-0 lg:end-auto lg:bottom-0 w-64
+            transition-all duration-300 transform
+            h-full
+            fixed top-0 start-0 bottom-0 z-[60]
+            bg-white border-e border-gray-200">
+  <div class="relative flex flex-col h-full max-h-full">
+    <header class="p-4 flex justify-between items-center gap-x-2">
+      <a class="font-semibold text-xl text-black" href="#" aria-label="Brand">Brand</a>
+      <div class="-me-2">
+        <button type="button" id="sidebarCloseButton" class="size-6 bg-white border border-gray-200 text-sm text-gray-600 hover:bg-gray-100 rounded-full">
+          <svg class="size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+          <span class="sr-only">Close</span>
+        </button>
+      </div>
+    </header>
+
+    <nav class="h-full overflow-y-auto px-2 pb-4 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300">
+      <ul class="space-y-1">
+        <li>
+          <a class="flex items-center gap-x-3.5 py-2 px-2.5 bg-gray-100 text-sm text-gray-800 rounded-lg hover:bg-gray-100" href="#">
+            <svg class="size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+            Dashboard
+          </a>
+        </li>
+
+        <li class="hs-accordion" id="users-accordion">
+          <button type="button" class="hs-accordion-toggle w-full flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100" aria-controls="users-accordion-collapse-1">
+            <svg class="size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="4"/><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Users
+            <svg class="hs-accordion-active:hidden ms-auto block size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            <svg class="hs-accordion-active:block ms-auto hidden size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+          </button>
+
+          <div id="users-accordion-collapse-1" class="hs-accordion-content hidden">
+            <ul class="ps-7 pt-2 space-y-1">
+              <li><a href="#" class="block py-2 px-2.5 text-sm text-gray-700 rounded hover:bg-gray-100">All Users</a></li>
+              <li><a href="#" class="block py-2 px-2.5 text-sm text-gray-700 rounded hover:bg-gray-100">Add New</a></li>
+              <li><a href="#" class="block py-2 px-2.5 text-sm text-gray-700 rounded hover:bg-gray-100">User Roles</a></li>
+            </ul>
+          </div>
+        </li>
+
+        <li class="hs-accordion" id="projects-accordion">
+          <button type="button" class="hs-accordion-toggle w-full flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100" aria-controls="projects-accordion-collapse-1">
+            <svg class="size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 2H8.6c-.4 0-.8.2-1.1.5-.3.3-.5.7-.5 1.1v12.8c0 .4.2.8.5 1.1.3.3.7.5 1.1.5h9.8c.4 0 .8-.2 1.1-.5.3-.3.5-.7.5-1.1V6.5L15.5 2z"/><path d="M3 7.6v12.8c0 .4.2.8.5 1.1.3.3.7.5 1.1.5h9.8"/><path d="M15 2v5h5"/></svg>
+            Projects
+            <svg class="hs-accordion-active:hidden ms-auto block size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            <svg class="hs-accordion-active:block ms-auto hidden size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+          </button>
+          <div id="projects-accordion-collapse-1" class="hs-accordion-content hidden">
+            <ul class="ps-7 pt-2 space-y-1">
+              <li><a href="#" class="block py-2 px-2.5 text-sm text-gray-700 rounded hover:bg-gray-100">All Projects</a></li>
+              <li><a href="#" class="block py-2 px-2.5 text-sm text-gray-700 rounded hover:bg-gray-100">Create New</a></li>
+            </ul>
+          </div>
+        </li>
+
+        <li>
+          <a href="#" class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100">
+            <svg class="size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+            Calendar <span class="ms-auto py-0.5 px-1.5 text-xs bg-gray-200 text-gray-800 rounded-full">New</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="#" class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100">
+            <svg class="size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15V6.3c0-.8-.7-1.5-1.5-1.5H9.6"/><path d="M10.5 3H5.3C4.6 3 4 3.6 4 4.3v15.4c0 .7.6 1.3 1.3 1.3h13.4c.7 0 1.3-.6 1.3-1.3V16"/><path d="m9 15 3-3-3-3"/></svg>
+            Documentation
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>
+<div id="page-wrapper" class="lg:ms-64 min-h-screen transition-all duration-300">
+  <div class="p-4 bg-white shadow flex items-center gap-x-2">
+    <button type="button" id="sidebarOpenButton" class="flex items-center gap-x-2 text-gray-600 hover:bg-gray-100 rounded-full p-2" aria-label="Toggle navigation">
+      <svg class="size-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M15 3v18"/><path d="m10 15-3-3 3-3"/></svg>
+      <span class="sr-only">Open sidebar</span>
+    </button>
+    <h1 class="text-xl font-bold text-gray-800">Dashboard</h1>
+  </div>
+
+  <main class="p-6">
+    <h1 class="text-2xl font-bold text-gray-800 mb-4">Welcome</h1>
+    <p class="text-gray-600">This is your main dashboard content area.</p>
+
+    <div class="mt-6 bg-white shadow rounded-lg p-6">
+      <h2 class="text-lg font-semibold text-gray-700 mb-2">Quick Stats</h2>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="p-4 bg-gray-100 rounded">
+          <p class="text-sm text-gray-500">Users</p>
+          <p class="text-xl font-bold text-gray-800">1,234</p>
+        </div>
+        <div class="p-4 bg-gray-100 rounded">
+          <p class="text-sm text-gray-500">Projects</p>
+          <p class="text-xl font-bold text-gray-800">56</p>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const body = document.body;
+  const sidebar = document.getElementById('hs-sidebar-content-push');
+  const pageWrapper = document.getElementById('page-wrapper');
+  const sidebarOpenButton = document.getElementById('sidebarOpenButton');
+  const sidebarCloseButton = document.getElementById('sidebarCloseButton');
+
+  // Function to toggle sidebar visibility and content push/pull
+  function toggleSidebar() {
+    // Check if the screen size is 'lg' or larger (1024px)
+    if (window.innerWidth >= 1024) {
+      body.classList.toggle('sidebar-closed');
+    } else {
+      // For mobile, manually toggle the 'hs-overlay-open' class
+      // which is what Preline's data-hs-overlay does.
+      // This part ensures mobile behavior remains consistent.
+      sidebar.classList.toggle('hs-overlay-open');
+
+      // Create/remove backdrop for mobile overlay
+      let backdrop = document.querySelector('.hs-overlay-backdrop');
+      if (sidebar.classList.contains('hs-overlay-open')) {
+          if (!backdrop) {
+              backdrop = document.createElement('div');
+              backdrop.className = 'hs-overlay-backdrop';
+              document.body.appendChild(backdrop);
+              backdrop.addEventListener('click', toggleSidebar); // Close on backdrop click
+          }
+          setTimeout(() => backdrop.style.opacity = '1', 10); // Fade in
+      } else {
+          if (backdrop) {
+              backdrop.style.opacity = '0'; // Fade out
+              setTimeout(() => {
+                  if (backdrop.parentNode) {
+                      backdrop.parentNode.removeChild(backdrop);
+                  }
+              }, 300); // Remove after transition
+          }
+      }
+    }
+  }
+
+  // Event Listeners for buttons
+  sidebarOpenButton.addEventListener('click', toggleSidebar);
+  sidebarCloseButton.addEventListener('click', toggleSidebar);
+
+  // Handle initial state on load and resize
+  function handleResize() {
+    if (window.innerWidth >= 1024) {
+      // On large screens, ensure sidebar is open by default unless explicitly closed
+      if (body.classList.contains('sidebar-closed')) {
+        // If sidebar was closed, keep it closed, but ensure mobile overlay classes are gone
+        sidebar.classList.remove('hs-overlay-open');
+        const backdrop = document.querySelector('.hs-overlay-backdrop');
+        if (backdrop && backdrop.parentNode) {
+            backdrop.parentNode.removeChild(backdrop);
+        }
+      } else {
+        // Otherwise, make sure it's open (default state)
+        sidebar.classList.remove('hs-overlay-open'); // Ensure no mobile overlay classes
+      }
+    } else {
+      // On mobile screens, always start with sidebar closed and push off-screen
+      // We rely on 'hidden' for initial hide, and 'hs-overlay-open' for actual open
+      body.classList.remove('sidebar-closed'); // Ensure large-screen class is not applied
+    }
+  }
+
+  // Add event listener for window resize
+  window.addEventListener('resize', handleResize);
+
+  // Initial call to set state correctly on page load
+  handleResize();
+});
+</script>
+
+</body>
+</html>

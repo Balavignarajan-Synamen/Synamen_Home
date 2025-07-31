@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="flex justify-center items-center min-h-screen bg-blue-400">
+    <div class="bg-white w-80 rounded-lg shadow-md p-6">
+      <!-- Header -->
+      <div>
+        <h1 class="text-2xl font-bold">Sign Up</h1>
+        <p class="mt-1 text-xs text-gray-500 border-b pb-2">
+          Please fill in this form to create an account!
+        </p>
+      </div>
+
+      <!-- Form Fields -->
+      <form class="mt-4 space-y-4">
+        <div class="flex space-x-3">
+          <input
+            type="text"
+            placeholder="First Name"
+            class="w-1/2 bg-gray-100 px-3 py-2 rounded text-sm placeholder:text-gray-600"
+          />
+          <input
+            type="text"
+            placeholder="Last Name"
+            class="w-1/2 bg-gray-100 px-3 py-2 rounded text-sm placeholder:text-gray-600"
+          />
+        </div>
+
+        <input
+          type="email"
+          placeholder="Email"
+          class="w-full bg-gray-100 px-3 py-2 rounded text-sm placeholder:text-gray-600"
+        />
+
+        <input
+          type="password"
+          placeholder="Password"
+          class="w-full bg-gray-100 px-3 py-2 rounded text-sm placeholder:text-gray-600"
+        />
+
+        <input
+          type="password"
+          placeholder="Confirm Password"
+          class="w-full bg-gray-100 px-3 py-2 rounded text-sm placeholder:text-gray-600"
+        />
+
+        <div class="flex items-center space-x-2 text-xs">
+          <input type="checkbox" id="terms" class="accent-blue-600" />
+          <label for="terms" class="text-gray-700">
+            I accept the
+            <a href="#" class="text-blue-600 hover:underline">Terms of Use</a> &
+            <a href="#" class="text-blue-600 hover:underline">Privacy Policy</a>
+          </label>
+        </div>
+
+        <button
+          type="submit"
+          class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+        >
+          Sign Up
+        </button>
+      </form>
+    </div>
+  </body>
+</html>

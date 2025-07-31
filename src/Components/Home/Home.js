@@ -1,28 +1,51 @@
 import React from 'react'
-import HomePage1 from './HomePage1'
-import NavHome from '../../Common/NavHome'
-import HomeAbout from './HomeAbout'
-import HomeService from './HomeService'
-import HomeManagement from './HomeManagement'
-import HomeCaseStudy from './HomeCaseStudy'
-import HomePortfolio from './HomePortfolio'
-import HomeTestimonial from './HomeTestimonial'
-import HomeBlog from './HomeBlog'
-import FooterHome from '../../Common/FooterHome'
+import ParentProps from '../../Props/ParentProps'
+import Child from '../../Props/props2/child'
+import ParentE from '../../Props/props3Ecommerce/ParentE'
+import UserList from '../../Props/props4User/UserList'
+import ProductList from '../../Props/Props5Products/ProductList'
+import UseStateCounter from '../../Hooks/UseState/UseStateCounter'
+import ShowHideText from '../../Hooks/UseState/ShowHideText'
+import FormUse from '../../Hooks/UseState/FormUse'
+import ThemeToggle from '../../Hooks/UseState/ThemeToggle'
+import ItemList from '../../Hooks/UseState/ItemList'
+import LoginForm from '../../Hooks/UseState/useState2/LoginForm'
+import ParentPop from '../../Hooks/UseState/useState2/popup/ParentPop'
+import MinishopCart from '../../Hooks/UseState/useState2/MinishopCart'
+import MiniCart from '../../Hooks/UseState/useState2/MinishopCart'
+import MiniFriendApp from '../../Hooks/UseState/useState2/MiniFriendApp'
 
 function Home() {
   return (
     <div> 
-        <NavHome/>  
-        <HomePage1/>
-        <HomeAbout/>
-        <HomeService/>
-        <HomeManagement/>
-        <HomeCaseStudy/>
-        <HomePortfolio/>
-        <HomeTestimonial/>
-        <HomeBlog/>
-        <FooterHome/>
+        {/* <ParentProps />
+        <Child /> */}
+
+
+        {/* <ParentE /> Ecommerce Props Example */}
+{/* ----------------------------------------------- */}
+
+         {/* UserCard and UserList Example  */}
+          {/* <UserList /> */}
+
+
+        {/* ProductList and ProductCard Example */}
+         {/* <ProductList /> */}
+
+
+
+         {/* **UseState Exercise** */}
+          {/* <UseStateCounter /> */}
+          {/* <ShowHideText /> */}
+          {/* <FormUse /> */}
+          {/* <ThemeToggle /> */}
+          {/* <ItemList /> */}
+         {/* **UseState Exercise 2** */}
+              {/* <LoginForm /> */}
+              {/* <ParentPop /> */}
+              {/* <MiniCart /> */}
+              <MiniFriendApp />
+
     </div>
   )
 }

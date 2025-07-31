@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 50%, #1d4ed8 100%);
+            padding: 1rem;
+        }
+
+        .container {
+            max-width: 1024px;
+            margin: 0 auto;
+        }
+
+        /* Header Styles */
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.125rem;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(16px);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .stat-card:hover {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .stat-number {
+            font-size: 1.875rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .stat-completed {
+            color: #93c5fd;
+        }
+
+        .stat-remaining {
+            color: #dbeafe;
+        }
+
+        /* Main Content Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        /* Task Form */
+        .task-form-container {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(16px);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .form-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-header h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 0.75rem;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .form-input:focus {
+            outline: none;
+            ring: 2px solid rgba(147, 197, 253, 0.5);
+            border-color: transparent;
+        }
+
+        .add-button {
+            width: 100%;
+            background: linear-gradient(to right, #3b82f6, #2563eb);
+            color: white;
+            font-weight: 500;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .add-button:hover:not(:disabled) {
+            background: linear-gradient(to right, #2563eb, #1d4ed8);
+            transform: scale(1.05);
+        }
+
+        .add-button:disabled {
+            background: linear-gradient(to right, #9ca3af, #6b7280);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Task List */
+        .task-list-container {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(16px);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .list-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .list-header h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .empty-state .emoji {
+            font-size: 3.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state p {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .task-list {
+            max-height: 384px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+        }
+
+        .task-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .task-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .task-list::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+        }
+
+        .task-list::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .task-item {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 0.75rem;
+            transition: all 0.3s ease;
+            animation: slideIn 0.5s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .task-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.02);
+        }
+
+        .task-content {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .task-checkbox {
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .task-checkbox:hover {
+            border-color: #60a5fa;
+            background: rgba(96, 165, 250, 0.2);
+        }
+
+        .task-checkbox.completed {
+            background: #3b82f6;
+            border-color: #3b82f6;
+            color: white;
+        }
+
+        .task-text {
+            flex: 1;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .task-text.completed {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: line-through;
+        }
+
+        .task-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .task-clock {
+            color: #93c5fd;
+            animation: pulse 2s infinite;
+        }
+
+        .delete-button {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 0.5rem;
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transform: scale(0.9);
+        }
+
+        .task-item:hover .delete-button {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .delete-button:hover {
+            background: #ef4444;
+            color: white;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(16px);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-label {
+            color: white;
+            font-weight: 500;
+        }
+
+        .progress-percentage {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.875rem;
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 9999px;
+            height: 0.75rem;
+        }
+
+        .progress-bar-fill {
+            background: linear-gradient(to right, #93c5fd, #3b82f6);
+            height: 0.75rem;
+            border-radius: 9999px;
+            transition: width 0.5s ease-out;
+            width: 0%;
+        }
+
+        /* Icons */
+        .icon {
+            width: 1.5rem;
+            height: 1.5rem;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .icon-sm {
+            width: 1rem;
+            height: 1rem;
+        }
+
+        .icon-blue {
+            color: #93c5fd;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        /* Responsive Design */
+        @media (min-width: 640px) {
+            body {
+                padding: 1.5rem;
+            }
+
+            .header h1 {
+                font-size: 4rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            body {
+                padding: 2rem;
+            }
+
+            .header h1 {
+                font-size: 5rem;
+            }
+
+            .main-grid {
+                grid-template-columns: 1fr 2fr;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>✨ Task Manager</h1>
+            <p>Stay organized and productive with style</p>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="total-tasks">0</div>
+                <div class="stat-label">Total Tasks</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number stat-completed" id="completed-tasks">0</div>
+                <div class="stat-label">Completed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number stat-remaining" id="remaining-tasks">0</div>
+                <div class="stat-label">Remaining</div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-grid">
+            <!-- Task Form -->
+            <div class="task-form-container">
+                <div class="form-header">
+                    <svg class="icon icon-blue" viewBox="0 0 24 24">
+                        <path d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z"/>
+                    </svg>
+                    <h2>Add New Task</h2>
+                </div>
+                <form id="task-form">
+                    <input 
+                        type="text" 
+                        id="task-input" 
+                        class="form-input" 
+                        placeholder="What needs to be done?"
+                        required
+                    >
+                    <button type="submit" class="add-button" id="add-button">
+                        <svg class="icon icon-sm" viewBox="0 0 24 24">
+                            <path d="M12 5v14m-7-7h14"/>
+                        </svg>
+                        Add Task
+                    </button>
+                </form>
+            </div>
+
+            <!-- Task List -->
+            <div class="task-list-container">
+                <div class="list-header">
+                    <svg class="icon icon-blue" viewBox="0 0 24 24">
+                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <h2>Your Tasks Bala</h2>
+                </div>
+                
+                <div id="empty-state" class="empty-state">
+                    <div class="emoji">🎯</div>
+                    <h3>No tasks yet!</h3>
+                    <p>Add your first task to get started on your productivity journey.</p>
+                </div>
+
+                <div id="task-list" class="task-list hidden"></div>
+            </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div id="progress-container" class="progress-container hidden">
+            <div class="progress-header">
+                <span class="progress-label">Progress</span>
+                <span class="progress-percentage" id="progress-percentage">0%</span>
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progress-bar-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class TaskManager {
+            constructor() {
+                this.tasks = [];
+                this.taskIdCounter = 1;
+                this.initializeElements();
+                this.bindEvents();
+                this.updateUI();
+            }
+
+            initializeElements() {
+                this.taskForm = document.getElementById('task-form');
+                this.taskInput = document.getElementById('task-input');
+                this.addButton = document.getElementById('add-button');
+                this.taskList = document.getElementById('task-list');
+                this.emptyState = document.getElementById('empty-state');
+                this.progressContainer = document.getElementById('progress-container');
+                this.progressFill = document.getElementById('progress-bar-fill');
+                this.progressPercentage = document.getElementById('progress-percentage');
+                this.totalTasksEl = document.getElementById('total-tasks');
+                this.completedTasksEl = document.getElementById('completed-tasks');
+                this.remainingTasksEl = document.getElementById('remaining-tasks');
+            }
+
+            bindEvents() {
+                this.taskForm.addEventListener('submit', (e) => this.handleSubmit(e));
+                this.taskInput.addEventListener('input', () => this.updateAddButton());
+            }
+
+            handleSubmit(e) {
+                e.preventDefault();
+                const text = this.taskInput.value.trim();
+                if (text) {
+                    this.addTask(text);
+                    this.taskInput.value = '';
+                    this.updateAddButton();
+                }
+            }
+
+            addTask(text) {
+                const task = {
+                    id: this.taskIdCounter++,
+                    text: text,
+                    completed: false
+                };
+                this.tasks.push(task);
+                this.updateUI();
+            }
+
+            toggleTask(id) {
+                const task = this.tasks.find(t => t.id === id);
+                if (task) {
+                    task.completed = !task.completed;
+                    this.updateUI();
+                }
+            }
+
+            deleteTask(id) {
+                this.tasks = this.tasks.filter(t => t.id !== id);
+                this.updateUI();
+            }
+
+            updateAddButton() {
+                const hasText = this.taskInput.value.trim().length > 0;
+                this.addButton.disabled = !hasText;
+            }
+
+            updateUI() {
+                this.updateStats();
+                this.updateTaskList();
+                this.updateProgress();
+            }
+
+            updateStats() {
+                const total = this.tasks.length;
+                const completed = this.tasks.filter(t => t.completed).length;
+                const remaining = total - completed;
+
+                this.totalTasksEl.textContent = total;
+                this.completedTasksEl.textContent = completed;
+                this.remainingTasksEl.textContent = remaining;
+            }
+
+            updateTaskList() {
+                if (this.tasks.length === 0) {
+                    this.emptyState.classList.remove('hidden');
+                    this.taskList.classList.add('hidden');
+                } else {
+                    this.emptyState.classList.add('hidden');
+                    this.taskList.classList.remove('hidden');
+                    this.renderTasks();
+                }
+            }
+
+            renderTasks() {
+                this.taskList.innerHTML = '';
+                this.tasks.forEach((task, index) => {
+                    const taskElement = this.createTaskElement(task, index);
+                    this.taskList.appendChild(taskElement);
+                });
+            }
+
+            createTaskElement(task, index) {
+                const taskDiv = document.createElement('div');
+                taskDiv.className = 'task-item';
+                taskDiv.style.animationDelay = `${index * 100}ms`;
+
+                taskDiv.innerHTML = `
+                    <div class="task-content">
+                        <button class="task-checkbox ${task.completed ? 'completed' : ''}" onclick="taskManager.toggleTask(${task.id})">
+                            ${task.completed ? '✓' : ''}
+                        </button>
+                        <span class="task-text ${task.completed ? 'completed' : ''}">${task.text}</span>
+                        <div class="task-actions">
+                            ${!task.completed ? '<span class="task-clock">⏰</span>' : ''}
+                            <button class="delete-button" onclick="taskManager.deleteTask(${task.id})">
+                                🗑️
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                return taskDiv;
+            }
+
+            updateProgress() {
+                const total = this.tasks.length;
+                const completed = this.tasks.filter(t => t.completed).length;
+
+                if (total > 0) {
+                    this.progressContainer.classList.remove('hidden');
+                    const percentage = Math.round((completed / total) * 100);
+                    this.progressPercentage.textContent = `${percentage}%`;
+                    this.progressFill.style.width = `${percentage}%`;
+                } else {
+                    this.progressContainer.classList.add('hidden');
+                }
+            }
+        }
+
+        // Initialize the task manager when the page loads
+        const taskManager = new TaskManager();
+    </script>
+</body>
+</html>
